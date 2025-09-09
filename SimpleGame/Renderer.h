@@ -34,6 +34,7 @@ private:
 	GLuint m_SolidRectShader = 0;
 
 	//lecture02
-	GLuint m_VBOTest {};
+	GLuint m_VBOTestPos{};
+	GLuint m_VBOTestColor{};
 };
 
