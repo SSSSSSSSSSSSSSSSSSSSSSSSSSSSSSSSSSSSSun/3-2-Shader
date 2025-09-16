@@ -19,7 +19,9 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 
 	//Load shaders
 	m_SolidRectShader = CompileShaders("./Shaders/SolidRect.vs", "./Shaders/SolidRect.fs");
-	
+
+	m_TestShader = CompileShaders("./Shaders/test.vs", "./Shaders/test.fs");
+
 	//Create VBOs
 	CreateVertexBufferObjects();
 
@@ -49,25 +51,32 @@ void Renderer::CreateVertexBufferObjects()
 
 	//lecture02
 
+	float temp{ 0.5f };
+	float size{ 0.1f };
+
 	float testPos[]
 	{
-		0.f, 0.f, 0.f,
-		1.f, 1.f, 0.f,
-		1.f, 0.f, 0.f,
-	}; 	// Triangle 1
+		(0.f - temp) * size, (0.f - temp) * size, 0.f,
+		(1.f - temp) * size, (0.f - temp) * size, 0.f,
+		(1.f - temp) * size, (1.f - temp) * size, 0.f, // Triangle 1
+		(0.f - temp) * size, (0.f - temp) * size, 0.f,
+		(1.f - temp) * size, (1.f - temp) * size, 0.f,
+		(0.f - temp) * size, (1.f - temp) * size, 0.f, // Triangle 2 
+	};
 
-	
 	glGenBuffers(1, &m_VBOTestPos);
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBOTestPos);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(testPos), testPos, GL_STATIC_DRAW);
 
-
 	float testColor[]
 	{
 		1.f, 0.f, 0.f, 1.f,
-		0.f, 0.f, 1.f, 1.f,
 		0.f, 1.f, 0.f, 1.f,
-	}; 	// Triangle 1
+		0.f, 0.f, 1.f, 1.f, // Triangle 1
+		1.f, 0.f, 0.f, 1.f,
+		0.f, 1.f, 0.f, 1.f,
+		0.f, 0.f, 1.f, 1.f, // Triangle 2
+	};
 
 
 	glGenBuffers(1, &m_VBOTestColor);
@@ -120,7 +129,7 @@ void Renderer::AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum S
 	glAttachShader(ShaderProgram, ShaderObj);
 }
 
-bool Renderer::ReadFile(char* filename, std::string *target)
+bool Renderer::ReadFile(char* filename, std::string* target)
 {
 	std::ifstream file(filename);
 	if (file.fail())
@@ -161,6 +170,8 @@ GLuint Renderer::CompileShaders(char* filenameVS, char* filenameFS)
 
 	// ShaderProgram 에 vs.c_str() 버텍스 쉐이더를 컴파일한 결과를 attach함
 	AddShader(ShaderProgram, vs.c_str(), GL_VERTEX_SHADER);
+	
+	printf("\n");
 
 	// ShaderProgram 에 fs.c_str() 프레그먼트 쉐이더를 컴파일한 결과를 attach함
 	AddShader(ShaderProgram, fs.c_str(), GL_FRAGMENT_SHADER);
@@ -202,10 +213,10 @@ void Renderer::DrawSolidRect(float x, float y, float z, float size, float r, flo
 	GetGLPosition(x, y, &newX, &newY);
 
 	//Program select
-	glUseProgram(m_SolidRectShader);
+	glUseProgram(m_TestShader);
 
-	glUniform4f(glGetUniformLocation(m_SolidRectShader, "u_Trans"), newX, newY, 0, size);
-	glUniform4f(glGetUniformLocation(m_SolidRectShader, "u_Color"), r, g, b, a);
+	glUniform4f(glGetUniformLocation(m_TestShader, "u_Trans"), newX, newY, 0, size);
+	glUniform4f(glGetUniformLocation(m_TestShader, "u_Color"), r, g, b, a);
 
 	int attribPosition = glGetAttribLocation(m_SolidRectShader, "a_Position");
 	glEnableVertexAttribArray(attribPosition);
@@ -221,29 +232,29 @@ void Renderer::DrawSolidRect(float x, float y, float z, float size, float r, flo
 
 void Renderer::DrawTest()
 {
-	glUseProgram(m_SolidRectShader);
+	glUseProgram(m_TestShader);
 
-	glUniform4f(glGetUniformLocation(m_SolidRectShader, "u_Trans"), 0, 0, 0, 1);
-	glUniform4f(glGetUniformLocation(m_SolidRectShader, "u_Color"), 1, 1, 1, 1);
+	glUniform4f(glGetUniformLocation(m_TestShader, "u_Trans"), 0, 0, 0, 1);
+	glUniform4f(glGetUniformLocation(m_TestShader, "u_Color"), 1, 1, 1, 1);
 
-	int aPosLoc{ glGetAttribLocation(m_SolidRectShader, "a_Position") };
-	int aColorLoc{ glGetAttribLocation(m_SolidRectShader, "a_Color") };
+	int aPosLoc{ glGetAttribLocation(m_TestShader, "a_Position") };
+	int aColorLoc{ glGetAttribLocation(m_TestShader, "a_Color") };
 
 	glEnableVertexAttribArray(aPosLoc);
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBOTestPos);
 	glVertexAttribPointer(aPosLoc, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);
-	glDrawArrays(GL_TRIANGLES, 0, 3);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
 
 	glEnableVertexAttribArray(aColorLoc);
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBOTestColor);
 	glVertexAttribPointer(aColorLoc, 4, GL_FLOAT, GL_FALSE, sizeof(float) * 4, 0);
-	glDrawArrays(GL_TRIANGLES, 0, 3);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
 
 	glDisableVertexAttribArray(aPosLoc);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void Renderer::GetGLPosition(float x, float y, float *newX, float *newY)
+void Renderer::GetGLPosition(float x, float y, float* newX, float* newY)
 {
 	*newX = x * 2.f / m_WindowSizeX;
 	*newY = y * 2.f / m_WindowSizeY;
