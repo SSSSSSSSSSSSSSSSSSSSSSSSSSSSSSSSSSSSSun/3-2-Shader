@@ -52,7 +52,7 @@ void Renderer::CreateVertexBufferObjects()
 	//lecture02
 
 	float temp{ 0.5f };
-	float size{ 0.1f };
+	float size{ 0.2f };
 
 	float testPos[]
 	{
@@ -232,10 +232,13 @@ void Renderer::DrawSolidRect(float x, float y, float z, float size, float r, flo
 
 void Renderer::DrawTest()
 {
+	m_fTime += 0.016f;
+
 	glUseProgram(m_TestShader);
 
-	glUniform4f(glGetUniformLocation(m_TestShader, "u_Trans"), 0, 0, 0, 1);
-	glUniform4f(glGetUniformLocation(m_TestShader, "u_Color"), 1, 1, 1, 1);
+	int uTimeLoc{ glGetUniformLocation(m_TestShader, "u_fTime") };
+
+	glUniform1f(uTimeLoc, m_fTime);
 
 	int aPosLoc{ glGetAttribLocation(m_TestShader, "a_Position") };
 	int aColorLoc{ glGetAttribLocation(m_TestShader, "a_Color") };
@@ -243,7 +246,6 @@ void Renderer::DrawTest()
 	glEnableVertexAttribArray(aPosLoc);
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBOTestPos);
 	glVertexAttribPointer(aPosLoc, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);
-	glDrawArrays(GL_TRIANGLES, 0, 6);
 
 	glEnableVertexAttribArray(aColorLoc);
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBOTestColor);
