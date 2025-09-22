@@ -1,7 +1,7 @@
 #version 330
 
 in vec3 a_Position;
-in float a_radius;
+in float a_Radius;
 in vec4 a_Color;
 
 out vec4 v_Color;
@@ -16,16 +16,11 @@ void main()
 
 	//newPosition.xy = newPosition.xy + vec2(tan(u_fTime)*0.5f,0);
 
-	float rad = PI * u_fTime ;
-	float size = a_radius;
+	float rad = PI * u_fTime;
+	float size = a_Radius;
 
-	newPosition.xy = (mat3(cos(rad),-sin(rad),0,sin(rad),cos(rad),0,0,0,1) * vec3(newPosition.xy, 1) ).xy;
-
-	if(1.0f != size){
-		rad *= -1;
-	}
-
-	newPosition.xy = newPosition.xy + vec2(cos(rad)*size, sin(rad)*size);
+	newPosition.x = cos(rad)*a_Radius + newPosition.x;
+	newPosition.y = sin(rad)*a_Radius + newPosition.y;
 
 	gl_Position = newPosition;
 
