@@ -14,13 +14,10 @@ void main()
 {
 	vec4 newPosition = vec4(a_Position, 1);
 
-	//newPosition.xy = newPosition.xy + vec2(tan(u_fTime)*0.5f,0);
+	float rad = PI * u_fTime * 0.25f;
 
-	float rad = PI * u_fTime;
-	float size = a_Radius;
-
-	newPosition.x = cos(rad)*a_Radius + newPosition.x;
-	newPosition.y = sin(rad)*a_Radius + newPosition.y;
+	newPosition.x = cos(rad) * a_Radius + newPosition.x;
+	newPosition.y = sin(rad) * a_Radius + newPosition.y;
 
 	gl_Position = newPosition;
 

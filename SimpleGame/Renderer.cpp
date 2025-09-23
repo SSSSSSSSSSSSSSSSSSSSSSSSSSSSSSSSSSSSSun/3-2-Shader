@@ -290,7 +290,7 @@ void Renderer::DrawParticle()
 	glUniform1f(uTimeLoc, m_fTime);
 
 	int aPosLoc{ glGetAttribLocation(m_ParticleShader, "a_Position") };
-	int aRadiusLoc{ glGetAttribLocation(m_ParticleShader, "a_radius") };
+	int aRadiusLoc{ glGetAttribLocation(m_ParticleShader, "a_Radius") };
 	int aColorLoc{ glGetAttribLocation(m_ParticleShader, "a_Color") };
 
 	glEnableVertexAttribArray(aPosLoc);
@@ -344,7 +344,7 @@ void Renderer::GenerateParticles(int NumParticle)
 		float z { 0.f };
 		float size{ (float)rand() / (float)RAND_MAX * 0.01f };
 
-		int index = i * nFloatCountPerVertex * nVerticesCountPerParticle;
+		int index = i * nFloatCountPerParticle;
 		vertices[index] = x - size; index++;	// v0
 		vertices[index] = y - size; index++;
 		vertices[index] = z; index++;
@@ -354,7 +354,7 @@ void Renderer::GenerateParticles(int NumParticle)
 		vertices[index] = b; index++;
 		vertices[index] = a; index++;
 
-		vertices[index] = x + size; index++;	// v1
+		vertices[index] = x - size; index++;	// v1
 		vertices[index] = y + size; index++;
 		vertices[index] = z; index++;
 		vertices[index] = value; index++;
@@ -364,15 +364,6 @@ void Renderer::GenerateParticles(int NumParticle)
 		vertices[index] = a; index++;
 
 		vertices[index] = x + size; index++;	// v2
-		vertices[index] = y - size; index++;
-		vertices[index] = z; index++;
-		vertices[index] = value; index++;
-		vertices[index] = r; index++;
-		vertices[index] = g; index++;
-		vertices[index] = b; index++;
-		vertices[index] = a; index++;
-
-		vertices[index] = x - size; index++;	// v3
 		vertices[index] = y + size; index++;
 		vertices[index] = z; index++;
 		vertices[index] = value; index++;
@@ -381,18 +372,27 @@ void Renderer::GenerateParticles(int NumParticle)
 		vertices[index] = b; index++;
 		vertices[index] = a; index++;
 
-		vertices[index] = x - size; index++;	// v4
-		vertices[index] = y - size; index++;
-		vertices[index] = -z; index++;
+		vertices[index] = x + size; index++;	// v3
+		vertices[index] = y + size; index++;
+		vertices[index] = z; index++;
 		vertices[index] = value; index++;
 		vertices[index] = r; index++;
 		vertices[index] = g; index++;
 		vertices[index] = b; index++;
 		vertices[index] = a; index++;
 
-		vertices[index] = x + size; index++;	// v5
-		vertices[index] = y + size; index++;
-		vertices[index] = -z; index++;
+		vertices[index] = x + size; index++;	// v4
+		vertices[index] = y - size; index++;
+		vertices[index] = z; index++;
+		vertices[index] = value; index++;
+		vertices[index] = r; index++;
+		vertices[index] = g; index++;
+		vertices[index] = b; index++;
+		vertices[index] = a; index++;
+
+		vertices[index] = x - size; index++;	// v5
+		vertices[index] = y - size; index++;
+		vertices[index] = z; index++;
 		vertices[index] = value; index++;
 		vertices[index] = r; index++;
 		vertices[index] = g; index++;
