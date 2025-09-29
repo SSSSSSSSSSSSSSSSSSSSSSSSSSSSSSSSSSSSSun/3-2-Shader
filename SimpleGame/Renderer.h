@@ -14,6 +14,7 @@ public:
 	~Renderer();
 
 	bool IsInitialized();
+	void ReloadAllShaderPrograms();		// 09/23
 	void DrawSolidRect(float x, float y, float z, float size, float r, float g, float b, float a);
 	void DrawTest();
 	void DrawParticle();
@@ -21,13 +22,15 @@ public:
 
 private:
 	void Initialize(int windowSizeX, int windowSizeY);
+	void CompileAllShaderPrograms();	// 09.23
+	void DeleteAllShaderPrograms();		// 09.23
 	bool ReadFile(char* filename, std::string* target);
 	void AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum ShaderType);
 	GLuint CompileShaders(char* filenameVS, char* filenameFS);
 	void CreateVertexBufferObjects();
 	void GetGLPosition(float x, float y, float* newX, float* newY);
 	void GenerateParticles(int NumParticle);
-	
+
 
 	bool m_Initialized = false;
 

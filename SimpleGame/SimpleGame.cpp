@@ -16,11 +16,18 @@ but WITHOUT ANY WARRANTY.
 #include "Renderer.h"
 
 Renderer *g_Renderer = NULL;
+bool g_bNeedReloadShaderPrograms{ false };
 
 void RenderScene(void)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClearColor(0.0f, 0.3f, 0.3f, 1.0f);
+
+	if (g_bNeedReloadShaderPrograms) {
+		g_Renderer->ReloadAllShaderPrograms();
+		g_bNeedReloadShaderPrograms = false;
+	}
+
 
 	// Renderer Test
 	//g_Renderer->DrawSolidRect(0, 0, 0, 100, 1, 1, 1, 0.5f);
@@ -36,17 +43,23 @@ void Idle(void)
 
 void MouseInput(int button, int state, int x, int y)
 {
-	RenderScene();
+
 }
 
 void KeyInput(unsigned char key, int x, int y)
 {
-	RenderScene();
+	switch (key) {
+	case '1':
+		g_bNeedReloadShaderPrograms = true;
+		break;
+	default:
+		break;
+	}
 }
 
 void SpecialKeyInput(int key, int x, int y)
 {
-	RenderScene();
+	
 }
 
 int main(int argc, char **argv)
