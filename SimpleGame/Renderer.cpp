@@ -390,6 +390,7 @@ void Renderer::GenerateParticles(int NumParticle)
 
 		value = (float)rand() / (float)RAND_MAX * 2.0f - 1.0f;
 
+
 		r = (float)rand() / (float)RAND_MAX;
 		g = (float)rand() / (float)RAND_MAX;
 		b = (float)rand() / (float)RAND_MAX;
@@ -406,7 +407,7 @@ void Renderer::GenerateParticles(int NumParticle)
 		lifeTime = (float)rand() / (float)RAND_MAX * 0.1f + 0.95f;
 
 		mass = 1.0f;
-		period = 0.05f;
+		period = 1.0f;
 
 		int index = i * nFloatCountPerParticle;
 		vertices[index] = x - size; index++;	// v0

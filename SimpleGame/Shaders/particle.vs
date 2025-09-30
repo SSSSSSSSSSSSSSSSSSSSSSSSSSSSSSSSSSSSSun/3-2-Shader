@@ -50,10 +50,8 @@ void sinParticle()
 	vec4 centerC = vec4(1,0,0,1);
 	vec4 borderC = vec4(1,1,1,0);
 
-	float globalTime = u_fTime * 0.5f;
-
 	float newTime = u_fTime - a_STime;
-	vec4 newPosition = vec4 (a_Position,1);
+	vec4 newPosition = vec4(a_Position,1);
 	float newAlpha = 1.0f;
 
 	vec4 newColor = a_Color;
@@ -62,25 +60,17 @@ void sinParticle()
 	if(newTime > 0){
 		float period = a_Period*10;
 
-		float t = fract((newTime)/a_LifeTime) * a_LifeTime;
+		float t = fract(newTime/a_LifeTime) * a_LifeTime;
 		float tt = t*t;
 
 		float x = t*2.0f-1.0f;
-		float y = t * sin(2*period*t*c_PI) * ((a_Value-0.5f)*2);
-		//y *= sin(fract(newTime/a_LifeTime) * c_PI);
+		float y = sin(2*period*t*c_PI) * (a_Value);
+		y *= sin(fract(newTime/a_LifeTime) * c_PI);
 
 		newPosition.xy += vec2(x,y);
 		newAlpha = 1.0f - t / a_LifeTime;
 		
 		newColor = mix(centerC, borderC, abs(y));
-
-
-		//mat4 TM = mat4(cos(globalTime), 0, sin(globalTime), 0,
-		//				0, 1, 0, 0,
-		//				-sin(globalTime), 0, cos(globalTime), 0,
-		//				0, 0, 0, 1); 
-
-		//newPosition.xy = (newPosition*TM).xy;
 
 		
 	}
@@ -112,15 +102,18 @@ void circleParticle()
 		float x = sin(a_Value*2*c_PI);
 		float y = cos(a_Value*2*c_PI);
 
+		newPosition.xy += vec2(x,y);
+
 		vec2 GravityVec = vec2(0, u_fGravity) * 0.0625f;
 
-		float newX = x + 0.5f*GravityVec.x*tt;
-		float newY = y + 0.5f*GravityVec.y*tt;
+		float newX =  0.5f*GravityVec.x*tt;
+		float newY =  0.5f*GravityVec.y*tt;
 
-		newPosition.xy = vec2(newX,newY);
+		newPosition.xy += vec2(newX,newY);
 
 		newAlpha = 1.0f - t / a_LifeTime;
-	
+		
+		
 		
 	}
 	else{
