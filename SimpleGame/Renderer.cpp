@@ -27,7 +27,7 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 
 	GenerateParticles(10'000);
 
-	CreateGridMesh(15, 15);
+	CreateGridMesh(50, 50);
 
 	if (m_SolidRectShader > 0 && m_VBORect > 0)
 	{
@@ -45,6 +45,8 @@ void Renderer::CompileAllShaderPrograms()
 	m_ParticleShader = CompileShaders("./Shaders/particle.vs", "./Shaders/particle.fs");
 
 	m_GridMeshShader = CompileShaders("./Shaders/GridMesh.vs", "./Shaders/GridMesh.fs");
+
+	m_FullScreenShader = CompileShaders("./Shaders/FullScreen.vs", "./Shaders/FullScreen.fs");
 }
 
 void Renderer::DeleteAllShaderPrograms()
@@ -53,6 +55,7 @@ void Renderer::DeleteAllShaderPrograms()
 	glDeleteShader(m_TestShader);
 	glDeleteShader(m_ParticleShader);
 	glDeleteShader(m_GridMeshShader);
+	glDeleteShader(m_FullScreenShader);
 }
 
 bool Renderer::IsInitialized()
@@ -127,6 +130,16 @@ void Renderer::CreateVertexBufferObjects()
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBOTestColor);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(testColor), testColor, GL_STATIC_DRAW);
 
+	float fullRect[]
+	{
+		-1.f, -1.f, 0.f, -1.f, 1.f, 0.f, 1.f, 1.f, 0.f,
+		-1.f, -1.f, 0.f, 1.f, 1.f, 0.f, 1.f, -1.f, 0.f,
+	};
+
+
+	glGenBuffers(1, &m_VBOFullScreen);
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBOFullScreen);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(fullRect), fullRect, GL_STATIC_DRAW);
 }
 
 
@@ -366,7 +379,8 @@ void Renderer::DrawParticle()
 
 void Renderer::DrawGridMesh()
 {
-	
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	//Program select
 	int shader = m_GridMeshShader;
@@ -381,11 +395,39 @@ void Renderer::DrawGridMesh()
 	glBindBuffer(GL_ARRAY_BUFFER, m_GridMeshVBO);
 	glVertexAttribPointer(attribPosition, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);
 
-	glDrawArrays(GL_LINE_STRIP, 0, m_GridMeshVertexCount);
+	glDrawArrays(GL_TRIANGLES, 0, m_GridMeshVertexCount);
 
 	glDisableVertexAttribArray(attribPosition);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	glDisable(GL_BLEND);
+}
+
+void Renderer::DrawFullScreenColor(float r, float g, float b, float a)
+{
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	GLuint shader{ m_FullScreenShader };
+
+	//Program select
+	glUseProgram(m_FullScreenShader);
+
+	glUniform4f(glGetUniformLocation(shader, "u_Color"), r, g, b, a);
+
+	int attribPosition = glGetAttribLocation(shader, "a_Position");
+	glEnableVertexAttribArray(attribPosition);
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBOFullScreen);
+	glVertexAttribPointer(attribPosition, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);
+
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+
+	glDisableVertexAttribArray(attribPosition);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	glDisable(GL_BLEND);
 }
 
 void Renderer::GetGLPosition(float x, float y, float* newX, float* newY)

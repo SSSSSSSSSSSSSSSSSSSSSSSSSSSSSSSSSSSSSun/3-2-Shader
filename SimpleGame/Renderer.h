@@ -16,7 +16,7 @@ public:
 	~Timer() {};
 
 	void GetDeltaTime();
-	float GetAllTime() { return m_fAllTime; }
+	float& GetAllTime() { return m_fAllTime; }
 };
 
 class Renderer
@@ -31,6 +31,7 @@ public:
 	void DrawTest();
 	void DrawParticle();
 	void DrawGridMesh();
+	void DrawFullScreenColor(float r, float g, float b, float a);
 	Timer& GetTimer() { return m_Timer; }
 
 private:
@@ -70,5 +71,9 @@ private:
 	GLuint m_GridMeshShader{};
 	GLuint m_GridMeshVertexCount{};
 	GLuint m_GridMeshVBO{};
+
+	//Full screen
+	GLuint m_VBOFullScreen{};
+	GLuint m_FullScreenShader{};
 };
 
