@@ -20,6 +20,8 @@ bool g_bNeedReloadShaderPrograms{ false };
 
 void RenderScene(void)
 {
+	g_Renderer->GetTimer().GetDeltaTime();
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
@@ -31,7 +33,9 @@ void RenderScene(void)
 
 	// Renderer Test
 	//g_Renderer->DrawSolidRect(0, 0, 0, 100, 1, 1, 1, 0.5f);
-	g_Renderer->DrawParticle();
+	//g_Renderer->DrawParticle();
+	g_Renderer->DrawGridMesh();
+
 
 	glutSwapBuffers();
 }

@@ -7,6 +7,18 @@
 
 #include "Dependencies\glew.h"
 
+class Timer {
+private:
+	std::chrono::steady_clock::time_point m_fPrevTime{ std::chrono::high_resolution_clock::now() };
+	float m_fAllTime{};
+public:
+	Timer() {};
+	~Timer() {};
+
+	void GetDeltaTime();
+	float GetAllTime() { return m_fAllTime; }
+};
+
 class Renderer
 {
 public:
@@ -18,7 +30,8 @@ public:
 	void DrawSolidRect(float x, float y, float z, float size, float r, float g, float b, float a);
 	void DrawTest();
 	void DrawParticle();
-
+	void DrawGridMesh();
+	Timer& GetTimer() { return m_Timer; }
 
 private:
 	void Initialize(int windowSizeX, int windowSizeY);
@@ -30,7 +43,7 @@ private:
 	void CreateVertexBufferObjects();
 	void GetGLPosition(float x, float y, float* newX, float* newY);
 	void GenerateParticles(int NumParticle);
-
+	void CreateGridMesh(int x, int y);
 
 	bool m_Initialized = false;
 
@@ -46,11 +59,16 @@ private:
 	GLuint m_TestShader{};
 
 	//Time
-	float m_fTime{};
+	Timer m_Timer{};
 
 	//Particle
 	GLuint m_ParticleShader{};
 	GLuint m_VBOParticle{};
 	GLuint m_VBOParticleVertexCount{};
+
+	//Grid mesh
+	GLuint m_GridMeshShader{};
+	GLuint m_GridMeshVertexCount{};
+	GLuint m_GridMeshVBO{};
 };
 
