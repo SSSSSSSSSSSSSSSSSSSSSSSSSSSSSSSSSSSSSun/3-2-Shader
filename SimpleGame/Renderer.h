@@ -1,5 +1,13 @@
 #pragma once
 
+enum SelectMode {
+	TEST,
+	SOLID_RECT,
+	PARTICLE,
+	GRID_MESH,
+	PRACTICE = 0xff
+};
+
 #include <string>
 #include <cstdlib>
 #include <fstream>
@@ -33,6 +41,9 @@ public:
 	void DrawGridMesh();
 	void DrawFullScreenColor(float r, float g, float b, float a);
 	Timer& GetTimer() { return m_Timer; }
+
+	//Draw Mode
+	SelectMode m_NowMode{ GRID_MESH };
 
 private:
 	void Initialize(int windowSizeX, int windowSizeY);
@@ -78,5 +89,9 @@ private:
 
 	//For raindrop effect
 	float m_Points[400];
+
+	// Practice
+	GLuint m_PracticeShader{};
+	GLuint m_PracticeVBO{};
 };
 

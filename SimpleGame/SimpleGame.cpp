@@ -33,9 +33,24 @@ void RenderScene(void)
 
 
 	// Renderer Test
-	//g_Renderer->DrawSolidRect(0, 0, 0, 100, 1, 1, 1, 0.5f);
-	//g_Renderer->DrawParticle();
-	g_Renderer->DrawGridMesh();
+	switch (g_Renderer->m_NowMode) {
+	case TEST:
+		g_Renderer->DrawTest();
+		break;
+	case SOLID_RECT:
+		g_Renderer->DrawSolidRect(0, 0, 0, 100, 1, 1, 1, 0.5f);
+		break;
+	case PARTICLE:
+		g_Renderer->DrawParticle();
+		break;
+	case GRID_MESH:
+		g_Renderer->DrawGridMesh();
+		break;
+
+
+	case PRACTICE:
+		break;
+	}
 
 	glutSwapBuffers();
 }
@@ -55,6 +70,26 @@ void KeyInput(unsigned char key, int x, int y)
 	switch (key) {
 	case '1':
 		g_bNeedReloadShaderPrograms = true;
+		break;
+	case 'Q':
+	case 'q':
+		g_Renderer->m_NowMode = TEST;
+		break;
+	case 'W':
+	case 'w':
+		g_Renderer->m_NowMode = SOLID_RECT;
+		break;
+	case 'E':
+	case 'e':
+		g_Renderer->m_NowMode = PARTICLE;
+		break;
+	case 'R':
+	case 'r':
+		g_Renderer->m_NowMode = GRID_MESH;
+		break;
+	case 'Z':
+	case 'z':
+		g_Renderer->m_NowMode = PRACTICE;
 		break;
 	default:
 		break;

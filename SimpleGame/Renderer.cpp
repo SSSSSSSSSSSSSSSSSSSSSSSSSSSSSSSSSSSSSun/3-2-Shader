@@ -44,6 +44,8 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 	}
 
 
+
+
 	if (m_SolidRectShader > 0 && m_VBORect > 0)
 	{
 		m_Initialized = true;
@@ -62,6 +64,8 @@ void Renderer::CompileAllShaderPrograms()
 	m_GridMeshShader = CompileShaders("./Shaders/GridMesh.vs", "./Shaders/GridMesh.fs");
 
 	m_FullScreenShader = CompileShaders("./Shaders/FullScreen.vs", "./Shaders/FullScreen.fs");
+
+	m_PracticeShader = CompileShaders("./Shaders/Practice.vs", "./Shaders/Practice.fs");
 }
 
 void Renderer::DeleteAllShaderPrograms()
@@ -71,6 +75,7 @@ void Renderer::DeleteAllShaderPrograms()
 	glDeleteShader(m_ParticleShader);
 	glDeleteShader(m_GridMeshShader);
 	glDeleteShader(m_FullScreenShader);
+	glDeleteShader(m_PracticeShader);
 }
 
 bool Renderer::IsInitialized()
