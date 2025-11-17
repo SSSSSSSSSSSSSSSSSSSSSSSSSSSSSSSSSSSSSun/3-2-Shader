@@ -5,6 +5,7 @@ enum SelectMode {
 	SOLID_RECT,
 	PARTICLE,
 	GRID_MESH,
+	FS,
 	PRACTICE = 0xff
 };
 
@@ -40,6 +41,7 @@ public:
 	void DrawParticle();
 	void DrawGridMesh();
 	void DrawFullScreenColor(float r, float g, float b, float a);
+	void DrawFS();
 	Timer& GetTimer() { return m_Timer; }
 
 	//Draw Mode
@@ -56,6 +58,8 @@ private:
 	void GetGLPosition(float x, float y, float* newX, float* newY);
 	void GenerateParticles(int NumParticle);
 	void CreateGridMesh(int x, int y);
+	void CreateFS(float r, float g, float b, float a);
+
 
 	bool m_Initialized = false;
 
@@ -93,5 +97,9 @@ private:
 	// Practice
 	GLuint m_PracticeShader{};
 	GLuint m_PracticeVBO{};
+
+	// For Fragment Shader factory;
+	GLuint m_VBOFS{};
+	GLuint m_FSShader{};
 };
 

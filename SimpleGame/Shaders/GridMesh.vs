@@ -73,9 +73,51 @@ void RainDrop()
 	v_Color = vec4(1,1,1,newColor);
 }
 
+void Pulse()
+{
+   vec4 newPosition = vec4(a_Position, 1);
+   float t = fract(u_fTime);
+
+   vec2 pos = vec2(a_Position.xy);
+   vec2 cen = vec2(0, 0);
+   float d = distance(pos, cen);
+
+   float ringDifference = abs(d - t);
+   float thickness = 20.0;
+
+   float ring = 1.0 - clamp(ringDifference * thickness, 0, 1);
+   float fade = 1.0 - t;
+   float newColor = ring * fade;
+
+   gl_Position = newPosition;
+   v_Color = vec4(1,1,1,newColor);
+}
+
+void P8()
+{
+	vec4 newPosition = vec4(a_Position, 1);
+	float valueX = newPosition.x + 0.5;
+	float greyScale = sin(2*c_PI * valueX * 4);
+	v_Color = vec4(greyScale);
+	gl_Position = newPosition;
+}
+
+void P9()
+{
+	vec4 newPosition = vec4(a_Position, 1);
+	float valueX = newPosition.x + 0.5;
+	float valueY = newPosition.y + 0.5;
+	float greyScale = sin(2*c_PI * valueX * 2);
+	greyScale = greyScale + sin(2*c_PI*valueY*2);
+	v_Color = vec4(greyScale);
+	gl_Position = newPosition;
+}
+
 void main()
 {
 	//Flag();
 	//Wave();
-	RainDrop();
+	//RainDrop();
+	//Pulse();
+	P9();
 }

@@ -22,9 +22,9 @@ void RenderScene(void)
 {
 	g_Renderer->GetTimer().GetDeltaTime();
 
-	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	//glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-	g_Renderer->DrawFullScreenColor(0, 0, 0, 0.5f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	//g_Renderer->DrawFullScreenColor(0, 0, 0, 0.5f);
 
 	if (g_bNeedReloadShaderPrograms) {
 		g_Renderer->ReloadAllShaderPrograms();
@@ -46,7 +46,9 @@ void RenderScene(void)
 	case GRID_MESH:
 		g_Renderer->DrawGridMesh();
 		break;
-
+	case FS:
+		g_Renderer->DrawFS();
+		break;
 
 	case PRACTICE:
 		break;
@@ -86,6 +88,10 @@ void KeyInput(unsigned char key, int x, int y)
 	case 'R':
 	case 'r':
 		g_Renderer->m_NowMode = GRID_MESH;
+		break;
+	case 'T':
+	case 't':
+		g_Renderer->m_NowMode = FS;
 		break;
 	case 'Z':
 	case 'z':
