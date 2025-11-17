@@ -23,7 +23,7 @@ void RenderScene(void)
 	g_Renderer->GetTimer().GetDeltaTime();
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	//glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	//g_Renderer->DrawFullScreenColor(0, 0, 0, 0.5f);
 
 	if (g_bNeedReloadShaderPrograms) {
