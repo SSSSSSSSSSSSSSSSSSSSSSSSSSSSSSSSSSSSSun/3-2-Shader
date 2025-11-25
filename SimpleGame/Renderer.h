@@ -6,6 +6,7 @@ enum SelectMode {
 	PARTICLE,
 	GRID_MESH,
 	FS,
+	TEXTURE,
 	PRACTICE = 0xff
 };
 
@@ -13,8 +14,10 @@ enum SelectMode {
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
+#include <cassert>
 
 #include "Dependencies\glew.h"
+#include "LoadPng.h"
 
 class Timer {
 private:
@@ -42,6 +45,9 @@ public:
 	void DrawGridMesh();
 	void DrawFullScreenColor(float r, float g, float b, float a);
 	void DrawFS();
+	void DrawTexture(float x, float y, float sizeX, float sizeY, GLuint TexID);
+	void DrawDebugTexture();
+	void DrawFBOs();
 	Timer& GetTimer() { return m_Timer; }
 
 	//Draw Mode
@@ -59,7 +65,9 @@ private:
 	void GenerateParticles(int NumParticle);
 	void CreateGridMesh(int x, int y);
 	void CreateFS(float r, float g, float b, float a);
-
+	void CreateTexture();
+	GLuint CreatePngTexture(char* filePath, GLuint samplingMethod);
+	void CreateFBOs();
 
 	bool m_Initialized = false;
 
@@ -101,5 +109,28 @@ private:
 	// For Fragment Shader factory;
 	GLuint m_VBOFS{};
 	GLuint m_FSShader{};
+
+	GLuint m_RGBTexture{};
+	GLuint m_Texture{};
+
+	std::array<GLuint, 11> m_NumTexture;
+
+	//Texture
+	GLuint m_TexVBO{};
+	GLuint m_TexShader{};
+
+	//FBO Color Buffers
+	GLuint m_RT0{};
+	GLuint m_RT1{};
+	GLuint m_RT2{};
+	GLuint m_RT3{};
+	GLuint m_RT4{};
+
+	//FBOs
+	GLuint m_FBO0{};
+	GLuint m_FBO1{};
+	GLuint m_FBO2{};
+	GLuint m_FBO3{};
+	GLuint m_FBO4{};
 };
 

@@ -23,7 +23,7 @@ void RenderScene(void)
 	g_Renderer->GetTimer().GetDeltaTime();
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	//glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	//g_Renderer->DrawFullScreenColor(0, 0, 0, 0.5f);
 
 	if (g_bNeedReloadShaderPrograms) {
@@ -48,6 +48,10 @@ void RenderScene(void)
 		break;
 	case FS:
 		g_Renderer->DrawFS();
+		break;
+	case TEXTURE:
+		g_Renderer->DrawFBOs();
+		g_Renderer->DrawDebugTexture();
 		break;
 
 	case PRACTICE:
@@ -93,6 +97,10 @@ void KeyInput(unsigned char key, int x, int y)
 	case 't':
 		g_Renderer->m_NowMode = FS;
 		break;
+	case 'Y':
+	case 'y':
+		g_Renderer->m_NowMode = TEXTURE;
+		break;
 	case 'Z':
 	case 'z':
 		g_Renderer->m_NowMode = PRACTICE;
@@ -110,7 +118,7 @@ void SpecialKeyInput(int key, int x, int y)
 int main(int argc, char **argv)
 {
 	// Initialize GL things
-	int winX{ 500 }, winY{ 500 };
+	int winX{ 512 }, winY{ 512 };
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);

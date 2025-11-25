@@ -5,6 +5,7 @@ in vec3 a_Position;
 uniform float u_fTime;
 
 out vec4 v_Color;
+out vec2 v_UV;
 
 const float c_PI = 3.141592f;
 uniform vec4 u_Points[MAX_POINT];
@@ -21,6 +22,7 @@ void Flag()
 
 	gl_Position = newPosition;
 	v_Color = vec4(1,1,1,newColor);
+	v_UV = vec2(a_Position.x + 0.5f, 0.5f - a_Position.y);
 }
 
 void Wave()
@@ -120,4 +122,6 @@ void main()
 	//RainDrop();
 	//Pulse();
 	P9();
+
+
 }
