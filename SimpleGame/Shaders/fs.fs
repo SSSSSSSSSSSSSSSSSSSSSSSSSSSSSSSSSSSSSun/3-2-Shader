@@ -1,6 +1,7 @@
 #version 330
 
 layout(location=0) out vec4 FragColor;
+layout(location=1) out vec4 FragColor1;
 
 in vec2 v_UV;
 
@@ -11,7 +12,7 @@ uniform float u_fTime;
 
 const float c_PI = 3.141592;
 
-void temp()
+vec4 temp()
 {
 	vec4 newColor = vec4(0);
     
@@ -20,10 +21,10 @@ void temp()
     float rdValue = 1-pow(abs(sin((v_UV.x-v_UV.y) * 2 * 4 * c_PI)), 0.5);
     float ldValue = 1-pow(abs(sin((1-v_UV.x-v_UV.y) * 2 * 4 * c_PI)), 0.5);
     newColor = vec4(max(max(max(xValue,yValue),rdValue),ldValue)); 
-    FragColor = newColor;
+    return newColor;
 }
 
-void texture1()
+vec4 texture1()
 {
     vec2 newUV = v_UV;
     float dx = 0;
@@ -33,10 +34,10 @@ void texture1()
 
     vec4 sampledColor = texture(u_RGBTexture, newUV);
 
-    FragColor = sampledColor;
+    return sampledColor;
 }
 
-void texture2()
+vec4 texture2()
 {
     vec2 newUV = v_UV;
     float dx = 0.1*sin(v_UV.y * 2 * c_PI * 2+ u_fTime);
@@ -46,11 +47,11 @@ void texture2()
 
     vec4 sampledColor = texture(u_RGBTexture, newUV);
    
-    FragColor = sampledColor;
+    return sampledColor;
 }
 
 
-void Circles()
+vec4 Circles()
 {
     vec2 newUV = v_UV; //0~1, left top (0,0)
     vec2 center = vec2(0.5, 0.5);
@@ -65,10 +66,10 @@ void Circles()
     //    newColor = vec4(1);
     //}
 
-    FragColor = newColor;
+    return newColor;
 }
 
-void Flag()
+vec4 Flag()
 {
     vec2 newUV = vec2(v_UV.x, 1-v_UV.y-0.5); //0~1, left bottom (0,0)
     vec4 newColor = vec4(0);
@@ -80,14 +81,14 @@ void Flag()
     {
         newColor = vec4(1);
     }
-    else
-    {
-        discard;
-    }
-    FragColor = newColor;
+    //else
+    //{
+    //    discard;
+    //}
+    return newColor;
 }
 
-void Q1()
+vec4 Q1()
 {
     vec2 newUV = vec2(v_UV.x, v_UV.y); //0~1, left top (0,0)
     float x = newUV.x; //0~1
@@ -95,10 +96,10 @@ void Q1()
 
     vec4 newColor = texture(u_RGBTexture, vec2(x,y));
 
-    FragColor = newColor;
+    return newColor;
 }
 
-void Q2()
+vec4 Q2()
 {
     vec2 newUV = vec2(v_UV.x, v_UV.y); //0~1, left top (0,0)
     float x = fract(newUV.x*3); //0~1 0~1 0~1
@@ -106,10 +107,10 @@ void Q2()
 
     vec4 newColor = texture(u_RGBTexture, vec2(x,y));
 
-    FragColor = newColor;
+    return newColor;
 }
 
-void Q3()
+vec4 Q3()
 {
     vec2 newUV = vec2(v_UV.x, v_UV.y); //0~1, left top (0,0)
     float x = fract(newUV.x*3); //0~1 0~1 0~1
@@ -117,10 +118,10 @@ void Q3()
 
     vec4 newColor = texture(u_RGBTexture, vec2(x,y));
 
-    FragColor = newColor;
+    return newColor;
 }
 
-void Brick_Horizontal()
+vec4 Brick_Horizontal()
 {
     vec2 newUV = vec2(v_UV.x, v_UV.y);
     float rCount = 5.0;
@@ -130,10 +131,10 @@ void Brick_Horizontal()
 
     vec4 newColor = texture(u_RGBTexture, vec2(x,y));
 
-    FragColor = newColor;
+    return newColor;
 }
 
-void Brick_Vertical()
+vec4 Brick_Vertical()
 {
     vec2 newUV = vec2(v_UV.x, v_UV.y);
     float x = fract(newUV.x * 2);
@@ -141,10 +142,10 @@ void Brick_Vertical()
 
     vec4 newColor = texture(u_RGBTexture, vec2(x,y));
 
-    FragColor = newColor;
+    return newColor;
 }
 
-void Brick_Horizontal_AI()
+vec4 Brick_Horizontal_AI()
 {
     float TILE_X = 5.0; // 가로 타일 개수 (그룹 개수)
     float TILE_Y = 5.0; // 세로 타일 개수
@@ -164,11 +165,11 @@ void Brick_Horizontal_AI()
     // 텍스처에서 색상 샘플링 (벽돌 모양으로 타일링된 텍스처)
     vec4 sampledColor = texture(u_RGBTexture, finalUV);
     
-    FragColor = sampledColor;
+    return sampledColor;
 }
 
 // 벽돌 타일링이 적용된 화면을 회전시키는 함수
-void RotatingBrickTiling()
+vec4 RotatingBrickTiling()
 {
     // ********** 1. UV 좌표 회전 변환 **********
     vec2 center = vec2(0.5, 0.5); // 회전 중심 (화면 중앙)
@@ -217,15 +218,15 @@ void RotatingBrickTiling()
     // ********** 3. 텍스처 샘플링 **********
     vec4 sampledColor = texture(u_RGBTexture, finalUV);
     
-    FragColor = sampledColor;
+    return sampledColor;
 }
 
-void Digit()
+vec4 Digit()
 {
-    FragColor = texture(u_DigitTextureLoc, v_UV);
+    return texture(u_DigitTextureLoc, v_UV);
 }
 
-void Digit_Num()
+vec4 Digit_Num()
 {
     int digit = int(u_fTime)%10;
 
@@ -238,10 +239,10 @@ void Digit_Num()
     ty *= 0.5f;
     tx += 0.2f * float(digit % 5) / 5;
     ty += 0.5f * floor(float(tileIndex) / 5);
-    FragColor = texture(u_NumTextureLoc, vec2(tx, ty));
+    return texture(u_NumTextureLoc, vec2(tx, ty));
 }
 
-void Digit_Num_FourDigits_NoIf()
+vec4 Digit_Num_FourDigits_NoIf()
 {
     // 1. 현재 시간(정수)을 10000으로 나눈 나머지로 제한 (0~9999)
     int totalTime = int(u_fTime) % 10000; 
@@ -320,11 +321,12 @@ void Digit_Num_FourDigits_NoIf()
     float ty = v_UV.y * tileHeight;
     ty += tileHeight * rowTile;
     
-    FragColor = texture(u_NumTextureLoc, vec2(tx, ty));
+    return texture(u_NumTextureLoc, vec2(tx, ty));
 }
 
 void main()
 {
     //Digit_Num();
-    Digit_Num_FourDigits_NoIf();
+    FragColor = Circles();
+    FragColor1 = Flag();
 }

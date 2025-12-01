@@ -120,8 +120,10 @@ private:
 	GLuint m_TexShader{};
 
 	//FBO Color Buffers
-	GLuint m_RT0{};
-	GLuint m_RT1{};
+	GLuint m_RT0_0{};
+	GLuint m_RT0_1{};
+	GLuint m_RT1_0{};
+	GLuint m_RT1_1{};
 	GLuint m_RT2{};
 	GLuint m_RT3{};
 	GLuint m_RT4{};
