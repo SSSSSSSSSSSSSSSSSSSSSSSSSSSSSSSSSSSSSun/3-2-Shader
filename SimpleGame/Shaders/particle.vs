@@ -8,8 +8,10 @@ in vec3 a_InitVec;
 in float a_LifeTime;
 in float a_Mass;
 in float a_Period;
+in vec2 a_UV;
 
 out vec4 v_Color;
+out vec2 v_UV;
 
 uniform float u_fTime;
 uniform float u_fGravity;
@@ -129,4 +131,6 @@ void main()
 	//raining();
 	//sinParticle();
 	circleParticle();
+
+	v_UV = a_UV;
 }

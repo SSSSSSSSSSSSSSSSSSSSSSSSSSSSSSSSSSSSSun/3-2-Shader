@@ -7,6 +7,7 @@ enum SelectMode {
 	GRID_MESH,
 	FS,
 	TEXTURE,
+	BLOOM,
 	PRACTICE = 0xff
 };
 
@@ -45,9 +46,11 @@ public:
 	void DrawGridMesh();
 	void DrawFullScreenColor(float r, float g, float b, float a);
 	void DrawFS();
-	void DrawTexture(float x, float y, float sizeX, float sizeY, GLuint TexID);
+	void DrawTexture(float x, float y, float sizeX, float sizeY, GLuint TexID0, GLuint TexID1, GLuint method);
 	void DrawDebugTexture();
 	void DrawFBOs();
+	void DrawBloomParticle();
+
 	Timer& GetTimer() { return m_Timer; }
 
 	//Draw Mode
@@ -127,6 +130,8 @@ private:
 	GLuint m_RT2{};
 	GLuint m_RT3{};
 	GLuint m_RT4{};
+	GLuint m_HDRRT0_0{};		// float texture
+	GLuint m_HDRRT0_1{};		// 
 
 	//FBOs
 	GLuint m_FBO0{};
@@ -134,5 +139,10 @@ private:
 	GLuint m_FBO2{};
 	GLuint m_FBO3{};
 	GLuint m_FBO4{};
+	GLuint m_HDRFBO0{};
+	GLuint m_ParticleTexture{};
+
+	std::array<GLuint, 2> m_PingpongFBO{};
+	std::array<GLuint, 2> m_PingpongTexture{};
 };
 

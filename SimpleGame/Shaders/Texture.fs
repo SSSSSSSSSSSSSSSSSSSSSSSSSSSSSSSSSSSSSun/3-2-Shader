@@ -5,7 +5,14 @@ layout(location=0) out vec4 FragColor;
 in vec2 v_Tex;
 
 uniform sampler2D u_TexID;
+uniform sampler2D u_TexID1;
+uniform int u_Method; // 0 : Normal, 1 : GaussianBlueH, 2 : GaussianBlueV, 3 : Merge
 uniform float u_fTime;
+
+vec4 Normal(sampler2D textureSampler,vec2 uv)
+{
+    return texture(textureSampler, uv);
+}
 
 vec4 ChromaticAberration(sampler2D textureSampler,vec2 uv)
 {
@@ -42,20 +49,75 @@ vec4 ChromaticAberration(sampler2D textureSampler,vec2 uv)
 }
 
 
-const int u_PixelSize = 50;
+const float c_PixelSize = 150;
+const float c_MinPixelSize = 10;
+
 
 vec4 PixelateEffect(sampler2D textureSampler, vec2 uv)
 {
-    float resol = (sin(u_fTime)+1)*u_PixelSize;
+    float resol = (sin(u_fTime)+1)*(c_PixelSize-c_MinPixelSize)+c_MinPixelSize;
     float tx = floor(uv.x*resol)/resol;
     float ty = floor(uv.y*resol)/resol;
 
     return texture(textureSampler, vec2(tx, ty));
 }
 
+const float weight[5] = float[] (0.227027, 0.1945946, 0.1216216, 0.054054, 0.016216);
+
+vec4 GaussianBlueH(sampler2D textureSampler, vec2 uv)
+{             
+    vec2 tex_offset = 1.0 / textureSize(textureSampler, 0); // gets size of single texel
+    vec3 result = texture(textureSampler, uv).rgb * weight[0]; // current fragment's contribution
+
+    for(int i = 1; i < 5; ++i)
+    {
+        result += texture(textureSampler, uv + vec2(tex_offset.x * i, 0.0)).rgb * weight[i];
+        result += texture(textureSampler, uv - vec2(tex_offset.x * i, 0.0)).rgb * weight[i];
+    }
+
+    return vec4(result, 1.0);
+}
+
+vec4 GaussianBlueV(sampler2D textureSampler, vec2 uv)
+{             
+    vec2 tex_offset = 1.0 / textureSize(textureSampler, 0); // gets size of single texel
+    vec3 result = texture(textureSampler, uv).rgb * weight[0]; // current fragment's contribution
+
+    for(int i = 1; i < 5; ++i)
+    {
+        result += texture(textureSampler, uv + vec2(0.0, tex_offset.y * i)).rgb * weight[i];
+        result += texture(textureSampler, uv - vec2(0.0, tex_offset.y * i)).rgb * weight[i];
+    }
+
+    return vec4(result, 1.0);
+}
+
+vec4 Merge(sampler2D textureSampler,sampler2D textureSampler1, vec2 uv)
+{
+    const float gamma = 2.2;
+    vec3 hdrColor = texture(textureSampler, uv).rgb;      
+    vec3 bloomColor = texture(textureSampler1, uv).rgb;
+    hdrColor += bloomColor; 
+
+    // tone mapping
+    vec3 result = vec3(1.0) - exp(-hdrColor * 5);
+
+    // also gamma correct while we're at it       
+    result = pow(result, vec3(1.0 / gamma));
+
+
+    return vec4(result, 1.0);
+}
+
 void main()
 {
     vec2 uv = vec2(v_Tex.x, 1.0 - v_Tex.y); 
     
-	FragColor = PixelateEffect(u_TexID, uv);
+	FragColor = vec4(0);
+
+    if(0 == u_Method) { FragColor = Normal(u_TexID, uv); }
+    if(1 == u_Method) { FragColor = GaussianBlueH(u_TexID, uv); }
+    if(2 == u_Method) { FragColor = GaussianBlueV(u_TexID, uv); }
+    if(3 == u_Method) { FragColor = Merge(u_TexID, u_TexID1, uv); }
+    
 }

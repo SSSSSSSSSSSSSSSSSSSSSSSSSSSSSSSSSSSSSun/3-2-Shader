@@ -53,6 +53,9 @@ void RenderScene(void)
 		g_Renderer->DrawFBOs();
 		g_Renderer->DrawDebugTexture();
 		break;
+	case BLOOM:
+		g_Renderer->DrawBloomParticle();
+		break;
 
 	case PRACTICE:
 		break;
@@ -100,6 +103,10 @@ void KeyInput(unsigned char key, int x, int y)
 	case 'Y':
 	case 'y':
 		g_Renderer->m_NowMode = TEXTURE;
+		break;
+	case 'U':
+	case 'u':
+		g_Renderer->m_NowMode = BLOOM;
 		break;
 	case 'Z':
 	case 'z':
